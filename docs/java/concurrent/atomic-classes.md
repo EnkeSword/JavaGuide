@@ -13,7 +13,7 @@ Atomic 翻译成中文是原子的意思。在化学上，我们知道原子是�
 
 并发包 `java.util.concurrent` 的原子类都存放在`java.util.concurrent.atomic`下,如下图所示。
 
-![JUC原子类概览](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/JUC原子类概览.png)
+![JUC原子类概览](https://oss.javaguide.cn/github/javaguide/java/JUC%E5%8E%9F%E5%AD%90%E7%B1%BB%E6%A6%82%E8%A7%88.png)
 
 根据操作的数据类型，可以将 JUC 包中的原子类分为 4 类
 
@@ -257,7 +257,7 @@ class Person {
 
 上述代码首先创建了一个 `Person` 对象，然后把 `Person` 对象设置进 `AtomicReference` 对象中，然后调用 `compareAndSet` 方法，该方法就是通过 CAS 操作设置 ar。如果 ar 的值为 `person` 的话，则将其设置为 `updatePerson`。实现原理与 `AtomicInteger` 类中的 `compareAndSet` 方法相同。运行上面的代码后的输出结果如下：
 
-```
+```plain
 Daisy
 20
 ```
@@ -312,7 +312,7 @@ public class AtomicStampedReferenceDemo {
 
 输出结果如下：
 
-```
+```plain
 currentValue=0, currentStamp=0
 currentValue=666, currentStamp=999, casResult=true
 currentValue=666, currentStamp=999
@@ -371,7 +371,7 @@ public class AtomicMarkableReferenceDemo {
 
 输出结果如下：
 
-```
+```plain
 currentValue=null, currentMark=false
 currentValue=true, currentMark=true, casResult=true
 currentValue=true, currentMark=true
@@ -398,47 +398,47 @@ currentValue=true, currentMark=true, wCasResult=true
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
 public class AtomicIntegerFieldUpdaterTest {
-	public static void main(String[] args) {
-		AtomicIntegerFieldUpdater<User> a = AtomicIntegerFieldUpdater.newUpdater(User.class, "age");
+  public static void main(String[] args) {
+    AtomicIntegerFieldUpdater<User> a = AtomicIntegerFieldUpdater.newUpdater(User.class, "age");
 
-		User user = new User("Java", 22);
-		System.out.println(a.getAndIncrement(user));// 22
-		System.out.println(a.get(user));// 23
-	}
+    User user = new User("Java", 22);
+    System.out.println(a.getAndIncrement(user));// 22
+    System.out.println(a.get(user));// 23
+  }
 }
 
 class User {
-	private String name;
-	public volatile int age;
+  private String name;
+  public volatile int age;
 
-	public User(String name, int age) {
-		super();
-		this.name = name;
-		this.age = age;
-	}
+  public User(String name, int age) {
+    super();
+    this.name = name;
+    this.age = age;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public int getAge() {
-		return age;
-	}
+  public int getAge() {
+    return age;
+  }
 
-	public void setAge(int age) {
-		this.age = age;
-	}
+  public void setAge(int age) {
+    this.age = age;
+  }
 
 }
 ```
 
 输出结果：
 
-```
+```plain
 22
 23
 ```
@@ -446,3 +446,5 @@ class User {
 ## 参考
 
 - 《Java 并发编程的艺术》
+
+<!-- @include: @article-footer.snippet.md -->

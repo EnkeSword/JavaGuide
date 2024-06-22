@@ -19,7 +19,7 @@ head:
 
 ### 什么是关系型数据库？
 
-顾名思义，关系型数据库（RDBMS，Relational Database Management System）就是一种建立在关系模型的基础上的数据库。关系模型表明了数据库中所存储的数据之间的联系（一对一、一对多、多对多）。
+顾名思义，关系型数据库（RDB，Relational Database）就是一种建立在关系模型的基础上的数据库。关系模型表明了数据库中所存储的数据之间的联系（一对一、一对多、多对多）。
 
 关系型数据库中，我们的数据都被存放在了各种表中（比如用户表），表中的每一行就存放着一条数据（比如一个用户的信息）。
 
@@ -29,7 +29,7 @@ head:
 
 **有哪些常见的关系型数据库呢？**
 
-MySQL、PostgreSQL、Oracle、SQL Server、SQLite（微信本地的聊天记录的存储就是用的 SQLite） ......。
+MySQL、PostgreSQL、Oracle、SQL Server、SQLite（微信本地的聊天记录的存储就是用的 SQLite） ……。
 
 ### 什么是 SQL？
 
@@ -45,7 +45,7 @@ SQL 可以帮助我们：
 - 对数据库中的数据进行简单的数据分析；
 - 搭配 Hive，Spark SQL 做大数据；
 - 搭配 SQLFlow 做机器学习；
-- ......
+- ……
 
 ### 什么是 MySQL？
 
@@ -69,6 +69,114 @@ MySQL 主要具有下面这些优点：
 6. 社区活跃，生态完善。
 7. 事务支持优秀， InnoDB 存储引擎默认使用 REPEATABLE-READ 并不会有任何性能损失，并且，InnoDB 实现的 REPEATABLE-READ 隔离级别其实是可以解决幻读问题发生的。
 8. 支持分库分表、读写分离、高可用。
+
+## MySQL 字段类型
+
+MySQL 字段类型可以简单分为三大类：
+
+- **数值类型**：整型（TINYINT、SMALLINT、MEDIUMINT、INT 和 BIGINT）、浮点型（FLOAT 和 DOUBLE）、定点型（DECIMAL）
+- **字符串类型**：CHAR、VARCHAR、TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT、TINYBLOB、BLOB、MEDIUMBLOB 和 LONGBLOB 等，最常用的是 CHAR 和 VARCHAR。
+- **日期时间类型**：YEAR、TIME、DATE、DATETIME 和 TIMESTAMP 等。
+
+下面这张图不是我画的，忘记是从哪里保存下来的了，总结的还蛮不错的。
+
+![MySQL 常见字段类型总结](https://oss.javaguide.cn/github/javaguide/mysql/summary-of-mysql-field-types.png)
+
+MySQL 字段类型比较多，我这里会挑选一些日常开发使用很频繁且面试常问的字段类型，以面试问题的形式来详细介绍。如无特殊说明，针对的都是 InnoDB 存储引擎。
+
+另外，推荐阅读一下《高性能 MySQL(第三版)》的第四章，有详细介绍 MySQL 字段类型优化。
+
+### 整数类型的 UNSIGNED 属性有什么用？
+
+MySQL 中的整数类型可以使用可选的 UNSIGNED 属性来表示不允许负值的无符号整数。使用 UNSIGNED 属性可以将正整数的上限提高一倍，因为它不需要存储负数值。
+
+例如， TINYINT UNSIGNED 类型的取值范围是 0 ~ 255，而普通的 TINYINT 类型的值范围是 -128 ~ 127。INT UNSIGNED 类型的取值范围是 0 ~ 4,294,967,295，而普通的 INT 类型的值范围是 -2,147,483,648 ~ 2,147,483,647。
+
+对于从 0 开始递增的 ID 列，使用 UNSIGNED 属性可以非常适合，因为不允许负值并且可以拥有更大的上限范围，提供了更多的 ID 值可用。
+
+### CHAR 和 VARCHAR 的区别是什么？
+
+CHAR 和 VARCHAR 是最常用到的字符串类型，两者的主要区别在于：**CHAR 是定长字符串，VARCHAR 是变长字符串。**
+
+CHAR 在存储时会在右边填充空格以达到指定的长度，检索时会去掉空格；VARCHAR 在存储时需要使用 1 或 2 个额外字节记录字符串的长度，检索时不需要处理。
+
+CHAR 更适合存储长度较短或者长度都差不多的字符串，例如 Bcrypt 算法、MD5 算法加密后的密码、身份证号码。VARCHAR 类型适合存储长度不确定或者差异较大的字符串，例如用户昵称、文章标题等。
+
+CHAR(M) 和 VARCHAR(M) 的 M 都代表能够保存的字符数的最大值，无论是字母、数字还是中文，每个都只占用一个字符。
+
+### VARCHAR(100)和 VARCHAR(10)的区别是什么？
+
+VARCHAR(100)和 VARCHAR(10)都是变长类型，表示能存储最多 100 个字符和 10 个字符。因此，VARCHAR (100) 可以满足更大范围的字符存储需求，有更好的业务拓展性。而 VARCHAR(10)存储超过 10 个字符时，就需要修改表结构才可以。
+
+虽说 VARCHAR(100)和 VARCHAR(10)能存储的字符范围不同，但二者存储相同的字符串，所占用磁盘的存储空间其实是一样的，这也是很多人容易误解的一点。
+
+不过，VARCHAR(100) 会消耗更多的内存。这是因为 VARCHAR 类型在内存中操作时，通常会分配固定大小的内存块来保存值，即使用字符类型中定义的长度。例如在进行排序的时候，VARCHAR(100)是按照 100 这个长度来进行的，也就会消耗更多内存。
+
+### DECIMAL 和 FLOAT/DOUBLE 的区别是什么？
+
+DECIMAL 和 FLOAT 的区别是：**DECIMAL 是定点数，FLOAT/DOUBLE 是浮点数。DECIMAL 可以存储精确的小数值，FLOAT/DOUBLE 只能存储近似的小数值。**
+
+DECIMAL 用于存储具有精度要求的小数，例如与货币相关的数据，可以避免浮点数带来的精度损失。
+
+在 Java 中，MySQL 的 DECIMAL 类型对应的是 Java 类 `java.math.BigDecimal`。
+
+### 为什么不推荐使用 TEXT 和 BLOB？
+
+TEXT 类型类似于 CHAR（0-255 字节）和 VARCHAR（0-65,535 字节），但可以存储更长的字符串，即长文本数据，例如博客内容。
+
+| 类型       | 可存储大小           | 用途           |
+| ---------- | -------------------- | -------------- |
+| TINYTEXT   | 0-255 字节           | 一般文本字符串 |
+| TEXT       | 0-65,535 字节        | 长文本字符串   |
+| MEDIUMTEXT | 0-16,772,150 字节    | 较大文本数据   |
+| LONGTEXT   | 0-4,294,967,295 字节 | 极大文本数据   |
+
+BLOB 类型主要用于存储二进制大对象，例如图片、音视频等文件。
+
+| 类型       | 可存储大小 | 用途                     |
+| ---------- | ---------- | ------------------------ |
+| TINYBLOB   | 0-255 字节 | 短文本二进制字符串       |
+| BLOB       | 0-65KB     | 二进制字符串             |
+| MEDIUMBLOB | 0-16MB     | 二进制形式的长文本数据   |
+| LONGBLOB   | 0-4GB      | 二进制形式的极大文本数据 |
+
+在日常开发中，很少使用 TEXT 类型，但偶尔会用到，而 BLOB 类型则基本不常用。如果预期长度范围可以通过 VARCHAR 来满足，建议避免使用 TEXT。
+
+数据库规范通常不推荐使用 BLOB 和 TEXT 类型，这两种类型具有一些缺点和限制，例如：
+
+- 不能有默认值。
+- 在使用临时表时无法使用内存临时表，只能在磁盘上创建临时表（《高性能 MySQL》书中有提到）。
+- 检索效率较低。
+- 不能直接创建索引，需要指定前缀长度。
+- 可能会消耗大量的网络和 IO 带宽。
+- 可能导致表上的 DML 操作变慢。
+- ……
+
+### DATETIME 和 TIMESTAMP 的区别是什么？
+
+DATETIME 类型没有时区信息，TIMESTAMP 和时区有关。
+
+TIMESTAMP 只需要使用 4 个字节的存储空间，但是 DATETIME 需要耗费 8 个字节的存储空间。但是，这样同样造成了一个问题，Timestamp 表示的时间范围更小。
+
+- DATETIME：1000-01-01 00:00:00 ~ 9999-12-31 23:59:59
+- Timestamp：1970-01-01 00:00:01 ~ 2037-12-31 23:59:59
+
+关于两者的详细对比，请参考我写的[MySQL 时间类型数据存储建议](./some-thoughts-on-database-storage-time.md)。
+
+### NULL 和 '' 的区别是什么？
+
+`NULL` 跟 `''`(空字符串)是两个完全不一样的值，区别如下：
+
+- `NULL` 代表一个不确定的值,就算是两个 `NULL`,它俩也不一定相等。例如，`SELECT NULL=NULL`的结果为 false，但是在我们使用`DISTINCT`,`GROUP BY`,`ORDER BY`时,`NULL`又被认为是相等的。
+- `''`的长度是 0，是不占用空间的，而`NULL` 是需要占用空间的。
+- `NULL` 会影响聚合函数的结果。例如，`SUM`、`AVG`、`MIN`、`MAX` 等聚合函数会忽略 `NULL` 值。 `COUNT` 的处理方式取决于参数的类型。如果参数是 `*`(`COUNT(*)`)，则会统计所有的记录数，包括 `NULL` 值；如果参数是某个字段名(`COUNT(列名)`)，则会忽略 `NULL` 值，只统计非空值的个数。
+- 查询 `NULL` 值时，必须使用 `IS NULL` 或 `IS NOT NULLl` 来判断，而不能使用 =、!=、 <、> 之类的比较运算符。而`''`是可以使用这些比较运算符的。
+
+看了上面的介绍之后，相信你对另外一个高频面试题：“为什么 MySQL 不建议使用 `NULL` 作为列默认值？”也有了答案。
+
+### Boolean 类型如何表示？
+
+MySQL 中没有专门的布尔类型，而是用 TINYINT(1) 类型来表示布尔值。TINYINT(1) 类型可以存储 0 或 1，分别对应 false 或 true。
 
 ## MySQL 基础架构
 
@@ -115,7 +223,7 @@ mysql> SELECT VERSION();
 1 row in set (0.00 sec)
 ```
 
-你也可以通过 `SHOW VARIABLES  LIKE '%storage_engine%'` 命令直接查看 MySQL 当前默认的存储引擎。
+你也可以通过 `SHOW VARIABLES LIKE '%storage_engine%'` 命令直接查看 MySQL 当前默认的存储引擎。
 
 ```bash
 mysql> SHOW VARIABLES  LIKE '%storage_engine%';
@@ -155,13 +263,13 @@ MySQL 5.5 版本之后，InnoDB 是 MySQL 的默认存储引擎。
 
 言归正传！咱们下面还是来简单对比一下两者：
 
-**1.是否支持行级锁**
+**1、是否支持行级锁**
 
 MyISAM 只有表级锁(table-level locking)，而 InnoDB 支持行级锁(row-level locking)和表级锁,默认为行级锁。
 
 也就说，MyISAM 一锁就是锁住了整张表，这在并发写的情况下是多么滴憨憨啊！这也是为什么 InnoDB 在并发写的时候，性能更牛皮了！
 
-**2.是否支持事务**
+**2、是否支持事务**
 
 MyISAM 不提供事务支持。
 
@@ -169,7 +277,7 @@ InnoDB 提供事务支持，实现了 SQL 标准定义了四个隔离级别，�
 
 关于 MySQL 事务的详细介绍，可以看看我写的这篇文章：[MySQL 事务隔离级别详解](./transaction-isolation-level.md)。
 
-**3.是否支持外键**
+**3、是否支持外键**
 
 MyISAM 不支持，而 InnoDB 支持。
 
@@ -183,19 +291,19 @@ MyISAM 不支持，而 InnoDB 支持。
 
 总结：一般我们也是不建议在数据库层面使用外键的，应用层面可以解决。不过，这样会对数据的一致性造成威胁。具体要不要使用外键还是要根据你的项目来决定。
 
-**4.是否支持数据库异常崩溃后的安全恢复**
+**4、是否支持数据库异常崩溃后的安全恢复**
 
 MyISAM 不支持，而 InnoDB 支持。
 
 使用 InnoDB 的数据库在异常崩溃后，数据库重新启动的时候会保证数据库恢复到崩溃前的状态。这个恢复的过程依赖于 `redo log` 。
 
-**5.是否支持 MVCC**
+**5、是否支持 MVCC**
 
 MyISAM 不支持，而 InnoDB 支持。
 
 讲真，这个对比有点废话，毕竟 MyISAM 连行级锁都不支持。MVCC 可以看作是行级锁的一个升级，可以有效减少加锁操作，提高性能。
 
-**6.索引实现不一样。**
+**6、索引实现不一样。**
 
 虽然 MyISAM 引擎和 InnoDB 引擎都是使用 B+Tree 作为索引结构，但是两者的实现方式不太一样。
 
@@ -203,11 +311,15 @@ InnoDB 引擎中，其数据文件本身就是索引文件。相比 MyISAM，索
 
 详细区别，推荐你看看我写的这篇文章：[MySQL 索引详解](./mysql-index.md)。
 
-**7.性能有差别。**
+**7、性能有差别。**
 
 InnoDB 的性能比 MyISAM 更强大，不管是在读写混合模式下还是只读模式下，随着 CPU 核数的增加，InnoDB 的读写能力呈线性增长。MyISAM 因为读写不能并发，它的处理能力跟核数没关系。
 
 ![InnoDB 和 MyISAM 性能对比](https://oss.javaguide.cn/github/javaguide/mysql/innodb-myisam-performance-comparison.png)
+
+**8、数据缓存策略和机制实现不同。**
+
+InnoDB 使用缓冲池（Buffer Pool）缓存数据页和索引页，MyISAM 使用键缓存（Key Cache）仅缓存索引页而不缓存数据页。
 
 **总结**：
 
@@ -273,6 +385,8 @@ SELECT sql_no_cache COUNT(*) FROM usr;
 
 ## MySQL 日志
 
+MySQL 日志常见的面试题有：
+
 - MySQL 中常见的日志有哪些？
 - 慢查询日志有什么用？
 - binlog 主要记录了什么？
@@ -280,7 +394,7 @@ SELECT sql_no_cache COUNT(*) FROM usr;
 - 页修改之后为什么不直接刷盘呢？
 - binlog 和 redolog 有什么区别？
 - undo log 如何保证事务的原子性？
-- ......
+- ……
 
 上诉问题的答案可以在[《Java 面试指北》(付费)](../../zhuanlan/java-mian-shi-zhi-bei.md) 的 **「技术面试题篇」** 中找到。
 
@@ -295,7 +409,7 @@ SELECT sql_no_cache COUNT(*) FROM usr;
 - 数据库中途突然因为某些原因挂掉了。
 - 客户端突然因为网络原因连接不上数据库了。
 - 并发访问数据库时，多个线程同时写入数据库，覆盖了彼此的更改。
-- ......
+- ……
 
 上面的任何一个问题都可能会导致数据的不一致性。为了保证数据的一致性，系统必须能够处理这些问题。事务就是我们抽象出来简化这些问题的首选机制。事务的概念起源于数据库，目前，已经成为一个比较广泛的概念。
 
@@ -365,7 +479,7 @@ COMMIT;
 
 一个事务读取数据并且对数据进行了修改，这个修改对其他事务来说是可见的，即使当前事务没有提交。这时另外一个事务读取了这个还未提交的数据，但第一个事务突然回滚，导致数据并没有被提交到数据库，那第二个事务读取到的就是脏数据，这也就是脏读的由来。
 
-例如：事务 1 读取某表中的数据 A=20，事务 1 修改 A=A-1，事务 2 读取到 A = 19,事务 1 回滚导致对 A 的修改并为提交到数据库， A 的值还是 20。
+例如：事务 1 读取某表中的数据 A=20，事务 1 修改 A=A-1，事务 2 读取到 A = 19,事务 1 回滚导致对 A 的修改并未提交到数据库， A 的值还是 20。
 
 ![脏读](./images/concurrency-consistency-issues-dirty-reading.png)
 
@@ -398,7 +512,7 @@ COMMIT;
 - 不可重复读的重点是内容修改或者记录减少比如多次读取一条记录发现其中某些记录的值被修改；
 - 幻读的重点在于记录新增比如多次执行同一条查询语句（DQL）时，发现查到的记录增加了。
 
-幻读其实可以看作是不可重复读的一种特殊情况，单独把区分幻读的原因主要是解决幻读和不可重复读的方案不一样。
+幻读其实可以看作是不可重复读的一种特殊情况，单独把幻读区分出来的原因主要是解决幻读和不可重复读的方案不一样。
 
 举个例子：执行 `delete` 和 `update` 操作的时候，可以直接对记录加锁，保证事务安全。而执行 `insert` 操作的时候，由于记录锁（Record Lock）只能锁住已经存在的记录，为了避免插入新记录，需要依赖间隙锁（Gap Lock）。也就是说执行 `insert` 操作的时候需要依赖 Next-Key Lock（Record Lock+Gap Lock） 进行加锁来保证不出现幻读。
 
@@ -406,7 +520,7 @@ COMMIT;
 
 MySQL 中并发事务的控制方式无非就两种：**锁** 和 **MVCC**。锁可以看作是悲观控制的模式，多版本并发控制（MVCC，Multiversion concurrency control）可以看作是乐观控制的模式。
 
-**锁** 控制方式下会通过锁来显示控制共享资源而不是通过调度手段，MySQL 中主要是通过 **读写锁** 来实现并发控制。
+**锁** 控制方式下会通过锁来显式控制共享资源而不是通过调度手段，MySQL 中主要是通过 **读写锁** 来实现并发控制。
 
 - **共享锁（S 锁）**：又称读锁，事务在读取记录的时候获取共享锁，允许多个事务同时获取（锁兼容）。
 - **排他锁（X 锁）**：又称写锁/独占锁，事务在修改记录的时候获取排他锁，不允许多个事务同时获取。如果一个记录已经被加了排他锁，那其他事务不能再对这条记录加任何类型的锁（锁不兼容）。
@@ -426,10 +540,10 @@ MVCC 在 MySQL 中实现所依赖的手段主要是: **隐藏字段、read view�
 
 SQL 标准定义了四个隔离级别：
 
-- **READ-UNCOMMITTED(读取未提交)**：最低的隔离级别，允许读取尚未提交的数据变更，可能会导致脏读、幻读或不可重复读。
-- **READ-COMMITTED(读取已提交)**：允许读取并发事务已经提交的数据，可以阻止脏读，但是幻读或不可重复读仍有可能发生。
-- **REPEATABLE-READ(可重复读)**：对同一字段的多次读取结果都是一致的，除非数据是被本身事务自己所修改，可以阻止脏读和不可重复读，但幻读仍有可能发生。
-- **SERIALIZABLE(可串行化)**：最高的隔离级别，完全服从 ACID 的隔离级别。所有的事务依次逐个执行，这样事务之间就完全不可能产生干扰，也就是说，该级别可以防止脏读、不可重复读以及幻读。
+- **READ-UNCOMMITTED(读取未提交)** ：最低的隔离级别，允许读取尚未提交的数据变更，可能会导致脏读、幻读或不可重复读。
+- **READ-COMMITTED(读取已提交)** ：允许读取并发事务已经提交的数据，可以阻止脏读，但是幻读或不可重复读仍有可能发生。
+- **REPEATABLE-READ(可重复读)** ：对同一字段的多次读取结果都是一致的，除非数据是被本身事务自己所修改，可以阻止脏读和不可重复读，但幻读仍有可能发生。
+- **SERIALIZABLE(可串行化)** ：最高的隔离级别，完全服从 ACID 的隔离级别。所有的事务依次逐个执行，这样事务之间就完全不可能产生干扰，也就是说，该级别可以防止脏读、不可重复读以及幻读。
 
 ---
 
@@ -511,8 +625,10 @@ InnoDB 行锁是通过对索引数据页上的记录加锁实现的，MySQL Inno
 由于 MVCC 的存在，对于一般的 `SELECT` 语句，InnoDB 不会加任何锁。不过， 你可以通过以下语句显式加共享锁或排他锁。
 
 ```sql
-# 共享锁
+# 共享锁 可以在 MySQL 5.7 和 MySQL 8.0 中使用
 SELECT ... LOCK IN SHARE MODE;
+# 共享锁 可以在 MySQL 8.0 中使用
+SELECT ... FOR SHARE;
 # 排他锁
 SELECT ... FOR UPDATE;
 ```
@@ -552,7 +668,10 @@ SELECT ... FOR UPDATE;
 
 ```sql
 SELECT ... FOR UPDATE
-SELECT ... LOCK IN SHARE MODE
+# 共享锁 可以在 MySQL 5.7 和 MySQL 8.0 中使用
+SELECT ... LOCK IN SHARE MODE;
+# 共享锁 可以在 MySQL 8.0 中使用
+SELECT ... FOR SHARE;
 ```
 
 快照即记录的历史版本，每行记录可能存在多个历史版本（多版本技术）。
@@ -575,6 +694,8 @@ SELECT ... LOCK IN SHARE MODE
 SELECT...FOR UPDATE
 # 对读的记录加一个S锁
 SELECT...LOCK IN SHARE MODE
+# 对读的记录加一个S锁
+SELECT...FOR SHARE
 # 对修改的记录加一个X锁
 INSERT...
 UPDATE...
@@ -589,8 +710,8 @@ DELETE...
 
 ```sql
 CREATE TABLE `sequence_id` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `stub` char(10) NOT NULL DEFAULT '',
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `stub` CHAR(10) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `stub` (`stub`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -694,6 +815,24 @@ mysql> EXPLAIN SELECT `score`,`name` FROM `cus_order` ORDER BY `score` DESC;
 
 读写分离和分库分表相关的问题比较多，于是，我单独写了一篇文章来介绍：[读写分离和分库分表详解](../../high-performance/read-and-write-separation-and-library-subtable.md)。
 
+### 深度分页如何优化？
+
+[深度分页介绍及优化建议](../../high-performance/deep-pagination-optimization.md)
+
+### 数据冷热分离如何做？
+
+[数据冷热分离详解](../../high-performance/data-cold-hot-separation.md)
+
+### 常见的数据库优化方法有哪些？
+
+- [索引优化](./mysql-index.md)
+- [读写分离和分库分表](../../high-performance/read-and-write-separation-and-library-subtable.md)
+- [数据冷热分离](../../high-performance/data-cold-hot-separation.md)
+- [SQL 优化](../../high-performance/sql-optimization.md)
+- [深度分页优化](../../high-performance/deep-pagination-optimization.md)
+- 适当冗余数据
+- 使用更高的硬件配置
+
 ## MySQL 学习资料推荐
 
 [**书籍推荐**](../../books/database.md#mysql) 。
@@ -712,6 +851,7 @@ mysql> EXPLAIN SELECT `score`,`name` FROM `cus_order` ORDER BY `score` DESC;
 - 《高性能 MySQL》第 7 章 MySQL 高级特性
 - 《MySQL 技术内幕 InnoDB 存储引擎》第 6 章 锁
 - Relational Database：<https://www.omnisci.com/technical-glossary/relational-database>
+- 一篇文章看懂 mysql 中 varchar 能存多少汉字、数字，以及 varchar(100)和 varchar(10)的区别：<https://www.cnblogs.com/zhuyeshen/p/11642211.html>
 - 技术分享 | 隔离级别：正确理解幻读：<https://opensource.actionsky.com/20210818-mysql/>
 - MySQL Server Logs - MySQL 5.7 Reference Manual：<https://dev.mysql.com/doc/refman/5.7/en/server-logs.html>
 - Redo Log - MySQL 5.7 Reference Manual：<https://dev.mysql.com/doc/refman/5.7/en/innodb-redo-log.html>
@@ -720,3 +860,5 @@ mysql> EXPLAIN SELECT `score`,`name` FROM `cus_order` ORDER BY `score` DESC;
 - 详解 MySQL InnoDB 中意向锁的作用：<https://juejin.cn/post/6844903666332368909>
 - 深入剖析 MySQL 自增锁：<https://juejin.cn/post/6968420054287253540>
 - 在数据库中不可重复读和幻读到底应该怎么分？：<https://www.zhihu.com/question/392569386>
+
+<!-- @include: @article-footer.snippet.md -->

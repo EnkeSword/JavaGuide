@@ -12,6 +12,8 @@ head:
       content: 全网质量最高的Java基础常见知识点和面试题总结，希望对你有帮助！
 ---
 
+<!-- @include: @article-header.snippet.md -->
+
 ## 异常
 
 **Java 异常类层次结构图概览**：
@@ -47,7 +49,7 @@ head:
 - `ArithmeticException`（算术错误）
 - `SecurityException` （安全错误比如权限不够）
 - `UnsupportedOperationException`(不支持的操作错误比如重复创建同一用户)
-- ......
+- ……
 
 ![](https://oss.javaguide.cn/github/javaguide/java/basis/unchecked-exception.png)
 
@@ -79,7 +81,7 @@ try {
 
 输出：
 
-```
+```plain
 Try to do something
 Catch Exception -> RuntimeException
 Finally
@@ -115,7 +117,7 @@ public static int f(int value) {
 
 输出：
 
-```
+```plain
 0
 ```
 
@@ -140,7 +142,7 @@ try {
 
 输出：
 
-```
+```plain
 Try to do something
 Catch Exception -> RuntimeException
 ```
@@ -216,8 +218,8 @@ catch (IOException e) {
 - 不要把异常定义为静态变量，因为这样会导致异常栈信息错乱。每次手动抛出异常，我们都需要手动 new 一个异常对象抛出。
 - 抛出的异常信息一定要有意义。
 - 建议抛出更加具体的异常比如字符串转换为数字格式错误的时候应该抛出`NumberFormatException`而不是其父类`IllegalArgumentException`。
-- 使用日志打印异常之后就不要再抛出异常了（两者不要同时存在一段代码逻辑中）。
-- ......
+- 避免重复记录日志：如果在捕获异常的地方已经记录了足够的信息（包括异常类型、错误信息和堆栈跟踪等），那么在业务代码中再次抛出这个异常时，就不应该再次记录相同的错误信息。重复记录日志会使得日志文件膨胀，并且可能会掩盖问题的实际原因，使得问题更难以追踪和解决。
+- ……
 
 ## 泛型
 
@@ -321,7 +323,7 @@ printArray( stringArray  );
 - 自定义接口通用返回结果 `CommonResult<T>` 通过参数 `T` 可根据具体的返回类型动态指定结果的数据类型
 - 定义 `Excel` 处理类 `ExcelUtil<T>` 用于动态指定 `Excel` 导出的数据类型
 - 构建集合工具类（参考 `Collections` 中的 `sort`, `binarySearch` 方法）。
-- ......
+- ……
 
 ## 反射
 
@@ -558,7 +560,7 @@ Java IO 流的 40 多个类都是从如下 4 个抽象类基类中派生出来�
 ```java
 String[] strs = {"JavaGuide", "公众号：JavaGuide", "博客：https://javaguide.cn/"};
 for (String s : strs) {
-  	System.out.println(s);
+    System.out.println(s);
 }
 ```
 
@@ -569,3 +571,5 @@ for (String s : strs) {
 Java 中最常用的语法糖主要有泛型、自动拆装箱、变长参数、枚举、内部类、增强 for 循环、try-with-resources 语法、lambda 表达式等。
 
 关于这些语法糖的详细解读，请看这篇文章 [Java 语法糖详解](./syntactic-sugar.md) 。
+
+<!-- @include: @article-footer.snippet.md -->

@@ -12,6 +12,8 @@ head:
       content: 全网质量最高的Java基础常见知识点和面试题总结，希望对你有帮助！
 ---
 
+<!-- @include: @article-header.snippet.md -->
+
 ## 面向对象基础
 
 ### 面向对象和面向过程的区别
@@ -112,7 +114,7 @@ System.out.println(str1.equals(str3));
 
 输出结果：
 
-```
+```plain
 false
 true
 true
@@ -194,7 +196,7 @@ public class Student {
 - 对象类型和引用类型之间具有继承（类）/实现（接口）的关系；
 - 引用类型变量发出的方法调用的到底是哪个类中的方法，必须在程序运行期间才能确定；
 - 多态不能调用“只在子类存在但在父类不存在”的方法；
-- 如果子类重写了父类的方法，真正执行的是子类覆盖的方法，如果子类没有覆盖父类的方法，执行的是父类的方法。
+- 如果子类重写了父类的方法，真正执行的是子类重写的方法，如果子类没有重写父类的方法，执行的是父类的方法。
 
 ### 接口和抽象类有什么共同点和区别？
 
@@ -291,7 +293,7 @@ Person person1Copy = person1.clone();
 System.out.println(person1.getAddress() == person1Copy.getAddress());
 ```
 
-从输出结构就可以看出，虽然 `person1` 的克隆对象和 `person1` 包含的 `Address` 对象已经是不同的了。
+从输出结构就可以看出，显然 `person1` 的克隆对象和 `person1` 包含的 `Address` 对象已经是不同的了。
 
 **那什么是引用拷贝呢？** 简单来说，引用拷贝就是两个不同的引用指向同一个对象。
 
@@ -319,7 +321,7 @@ public native int hashCode()
  */
 public boolean equals(Object obj)
 /**
- * naitive 方法，用于创建并返回当前对象的一份拷贝。
+ * native 方法，用于创建并返回当前对象的一份拷贝。
  */
 protected native Object clone() throws CloneNotSupportedException
 /**
@@ -339,7 +341,7 @@ public final native void notifyAll()
  */
 public final native void wait(long timeout) throws InterruptedException
 /**
- * 多了 nanos 参数，这个参数表示额外时间（以毫微秒为单位，范围是 0-999999）。 所以超时的时间还需要加上 nanos 毫秒。。
+ * 多了 nanos 参数，这个参数表示额外时间（以纳秒为单位，范围是 0-999999）。 所以超时的时间还需要加上 nanos 纳秒。。
  */
 public final void wait(long timeout, int nanos) throws InterruptedException
 /**
@@ -429,8 +431,8 @@ public boolean equals(Object anObject) {
 
 > ⚠️ 注意：该方法在 **Oracle OpenJDK8** 中默认是 "使用线程局部状态来实现 Marsaglia's xor-shift 随机数生成", 并不是 "地址" 或者 "地址转换而来", 不同 JDK/VM 可能不同在 **Oracle OpenJDK8** 中有六种生成方式 (其中第五种是返回地址), 通过添加 VM 参数: -XX:hashCode=4 启用第五种。参考源码:
 >
-> - https://hg.openjdk.org/jdk8u/jdk8u/hotspot/file/87ee5ee27509/src/share/vm/runtime/globals.hpp（1127行）
-> - https://hg.openjdk.org/jdk8u/jdk8u/hotspot/file/87ee5ee27509/src/share/vm/runtime/synchronizer.cpp（537行开始）
+> - <https://hg.openjdk.org/jdk8u/jdk8u/hotspot/file/87ee5ee27509/src/share/vm/runtime/globals.hpp>（1127 行）
+> - <https://hg.openjdk.org/jdk8u/jdk8u/hotspot/file/87ee5ee27509/src/share/vm/runtime/synchronizer.cpp>（537 行开始）
 
 ```java
 public native int hashCode();
@@ -507,7 +509,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
         count += len;
         return this;
     }
-  	//...
+    //...
 }
 ```
 
@@ -521,9 +523,9 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
 
 **对于三者使用的总结：**
 
-1. 操作少量的数据: 适用 `String`
-2. 单线程操作字符串缓冲区下操作大量数据: 适用 `StringBuilder`
-3. 多线程操作字符串缓冲区下操作大量数据: 适用 `StringBuffer`
+- 操作少量的数据: 适用 `String`
+- 单线程操作字符串缓冲区下操作大量数据: 适用 `StringBuilder`
+- 多线程操作字符串缓冲区下操作大量数据: 适用 `StringBuffer`
 
 ### String 为什么是不可变的?
 
@@ -532,7 +534,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
 ```java
 public final class String implements java.io.Serializable, Comparable<String>, CharSequence {
     private final char value[];
-	//...
+  //...
 }
 ```
 
@@ -570,7 +572,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
 >
 > 如果字符串中包含的汉字超过 Latin-1 可表示范围内的字符，`byte` 和 `char` 所占用的空间是一样的。
 >
-> 这是官方的介绍：https://openjdk.java.net/jeps/254 。
+> 这是官方的介绍：<https://openjdk.java.net/jeps/254> 。
 
 ### 字符串拼接用“+” 还是 StringBuilder?
 
@@ -644,7 +646,7 @@ System.out.println(aa==bb);// true
 
 会创建 1 或 2 个字符串对象。
 
-1、如果字符串常量池中不存在字符串对象“abc”的引用，那么会在堆中创建 2 个字符串对象“abc”。
+1、如果字符串常量池中不存在字符串对象“abc”的引用，那么它会在堆上创建两个字符串对象，其中一个字符串对象的引用会被保存在字符串常量池中。
 
 示例代码（JDK 1.8）：
 
@@ -760,7 +762,7 @@ String d = str1 + str2; // 常量池中的对象
 System.out.println(c == d);// true
 ```
 
-被 `final` 关键字修改之后的 `String` 会被编译器当做常量来处理，编译器在程序编译期就可以确定它的值，其效果就相当于访问常量。
+被 `final` 关键字修饰之后的 `String` 会被编译器当做常量来处理，编译器在程序编译期就可以确定它的值，其效果就相当于访问常量。
 
 如果 ，编译器在运行时才能知道其确切值的话，就无法对其优化。
 
@@ -780,4 +782,6 @@ public static String getStr() {
 ## 参考
 
 - 深入解析 String#intern：<https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html>
-- R 大（RednaxelaFX）关于常量折叠的回答：https://www.zhihu.com/question/55976094/answer/147302764
+- R 大（RednaxelaFX）关于常量折叠的回答：<https://www.zhihu.com/question/55976094/answer/147302764>
+
+<!-- @include: @article-footer.snippet.md -->

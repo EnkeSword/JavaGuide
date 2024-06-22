@@ -5,6 +5,8 @@ tag:
   - 安全
 ---
 
+<!-- @include: @article-header.snippet.md -->
+
 ## 什么是 JWT?
 
 JWT （JSON Web Token） 是目前最流行的跨域认证解决方案，是一种基于 Token 的认证授权机制。 从 JWT 的全称可以看出，JWT 本身也是 Token，一种规范化之后的 JSON 结构的 Token。
@@ -35,7 +37,7 @@ JWT 通常是这样的：`xxxxx.yyyyy.zzzzz`。
 
 示例：
 
-```
+```plain
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
 eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.
 SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
@@ -114,7 +116,7 @@ Signature 部分是对前两部分的签名，作用是防止 JWT（主要是 pa
 
 签名的计算公式如下：
 
-```
+```plain
 HMACSHA256(
   base64UrlEncode(header) + "." +
   base64UrlEncode(payload),
@@ -161,4 +163,6 @@ HMACSHA256(
 4. 一定不要将隐私信息存放在 Payload 当中。
 5. 密钥一定保管好，一定不要泄露出去。JWT 安全的核心在于签名，签名安全的核心在密钥。
 6. Payload 要加入 `exp` （JWT 的过期时间），永久有效的 JWT 不合理。并且，JWT 的过期时间不易过长。
-7. ......
+7. ……
+
+<!-- @include: @article-footer.snippet.md -->

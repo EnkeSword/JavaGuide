@@ -10,6 +10,8 @@ head:
       content: 简单介绍一下 Java 程序员必知的 Linux 的一些概念以及常见命令。
 ---
 
+<!-- @include: @small-advertisement.snippet.md -->
+
 简单介绍一下 Java 程序员必知的 Linux 的一些概念以及常见命令。
 
 ## 初探 Linux
@@ -101,7 +103,7 @@ inode 是 Linux/Unix 文件系统的基础。那 inode 到是什么?有什么作
 **2、软链接（Symbolic Link 或 Symlink）**
 
 - 软链接和源文件的 inode 节点号不同，而是指向一个文件路径。
-- 源文件删除后，硬链接依然存在，但是指向的是一个无效的文件路径。
+- 源文件删除后，软链接依然存在，但是指向的是一个无效的文件路径。
 - 软连接类似于 Windows 系统中的快捷方式。
 - 不同于硬链接，可以对目录或者不存在的文件创建软链接，并且，软链接可以跨越文件系统。
 - `ln -s` 命令用于创建软链接。
@@ -164,7 +166,7 @@ Linux 使用一种称为目录树的层次结构来组织文件和目录。目�
 
 下面只是给出了一些比较常用的命令。
 
-推荐一个 Linux 命令快查网站，非常不错，大家如果遗忘某些命令或者对某些命令不理解都可以在这里得到解决。Linux 命令在线速查手册：https://wangchujiang.com/linux-command/ 。
+推荐一个 Linux 命令快查网站，非常不错，大家如果遗忘某些命令或者对某些命令不理解都可以在这里得到解决。Linux 命令在线速查手册：<https://wangchujiang.com/linux-command/> 。
 
 ![ Linux 命令快查](https://oss.javaguide.cn/github/javaguide/cs-basics/operating-system/linux/linux-command-search.png)
 
@@ -235,7 +237,7 @@ Linux 中的打包文件一般是以 `.tar` 结尾的，压缩的命令一般是
 
 ### 文件权限
 
-操作系统中每个文件都拥有特定的权限、所属用户和所属组。权限是操作系统用来限制资源访问的机制，在 Linux 中权限一般分为读(readable)、写(writable)和执行(excutable)，分为三组。分别对应文件的属主(owner)，属组(group)和其他用户(other)，通过这样的机制来限制哪些用户、哪些组可以对特定的文件进行什么样的操作。
+操作系统中每个文件都拥有特定的权限、所属用户和所属组。权限是操作系统用来限制资源访问的机制，在 Linux 中权限一般分为读(readable)、写(writable)和执行(executable)，分为三组。分别对应文件的属主(owner)，属组(group)和其他用户(other)，通过这样的机制来限制哪些用户、哪些组可以对特定的文件进行什么样的操作。
 
 通过 **`ls -l`** 命令我们可以 查看某个目录下的文件或目录的权限
 
@@ -373,7 +375,7 @@ Linux 系统是一个多用户多任务的分时操作系统，任何一个要�
 - 用户级别环境变量 : `~/.bashrc`、`~/.bash_profile`。
 - 系统级别环境变量 : `/etc/bashrc`、`/etc/environment`、`/etc/profile`、`/etc/profile.d`。
 
-上述配置文件执行先后顺序为：`/etc/enviroment` –> `/etc/profile` –> `/etc/profile.d` –> `~/.bash_profile` –> `/etc/bashrc` –> `~/.bashrc`
+上述配置文件执行先后顺序为：`/etc/environment` –> `/etc/profile` –> `/etc/profile.d` –> `~/.bash_profile` –> `/etc/bashrc` –> `~/.bashrc`
 
 如果要修改系统级别环境变量文件，需要管理员具备对该文件的写入权限。
 
@@ -425,3 +427,5 @@ vim ~/.bash_profile
 ```bash
 source /etc/profile
 ```
+
+<!-- @include: @article-footer.snippet.md -->

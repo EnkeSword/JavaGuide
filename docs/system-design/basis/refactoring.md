@@ -28,7 +28,7 @@ category: 代码质量
 
 **常见的软件设计原则如下**：
 
-![常见的软件设计原则](https://oss.javaguide.cn/github/javaguide/system-design/basis/programming-principles%20.png)
+![常见的软件设计原则](https://oss.javaguide.cn/github/javaguide/system-design/basis/programming-principles.png)
 
 更全面的设计原则总结，可以看 **[java-design-patterns](https://github.com/iluwatar/java-design-patterns)** 和 **[hacker-laws-zh](https://github.com/nusr/hacker-laws-zh)** 这两个开源项目。
 
@@ -42,7 +42,7 @@ category: 代码质量
 2. **避免代码腐化**：通过重构干掉坏味道代码；
 3. **加深对代码的理解**：重构代码的过程会加深你对某部分代码的理解；
 4. **发现潜在 bug**：是这样的，很多潜在的 bug ，都是我们在重构的过程中发现的；
-5. ......
+5. ……
 
 看了上面介绍的关于重构带来的好处之后，你会发现重构的最终目标是 **提高软件开发速度和质量** 。
 
@@ -122,7 +122,7 @@ Code Review 可以非常有效提高代码的整体质量，它会帮助我们�
 - 学习了某个设计模式/工程实践之后，不顾项目实际情况，刻意使用在项目上（避免货物崇拜编程）；
 - 项目进展比较急的时候，重构项目调用的某个 API 的底层代码（重构之后对项目调用这个 API 并没有带来什么价值）；
 - 重写比重构更容易更省事；
-- ......
+- ……
 
 ### 遵循方法
 
@@ -140,3 +140,5 @@ Code Review 可以非常有效提高代码的整体质量，它会帮助我们�
 
 - [再读《重构》- ThoughtWorks 洞见 - 2020](https://insights.thoughtworks.cn/reread-refactoring/)：详细介绍了重构的要点比如小步重构、捡垃圾式的重构，主要是重构概念相关的介绍。
 - [常见代码重构技巧 - VectorJin - 2021](https://juejin.cn/post/6954378167947624484)：从软件设计原则、设计模式、代码分层、命名规范等角度介绍了如何进行重构，比较偏实战。
+
+<!-- @include: @article-footer.snippet.md -->

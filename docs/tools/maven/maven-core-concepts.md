@@ -139,7 +139,7 @@ Maven 的依赖范围如下：
 
 举个例子，项目存在下面这样的依赖关系：
 
-```
+```plain
 依赖链路一：A -> B -> C -> X(1.0)
 依赖链路二：A -> D -> X(2.0)
 ```
@@ -152,7 +152,7 @@ Maven 在遇到这种问题的时候，会遵循 **路径最短优先** 和 **�
 
 **路径最短优先**
 
-```
+```plain
 依赖链路一：A -> B -> C -> X(1.0) // dist = 3
 依赖链路二：A -> D -> X(2.0) // dist = 2
 ```
@@ -161,8 +161,8 @@ Maven 在遇到这种问题的时候，会遵循 **路径最短优先** 和 **�
 
 不过，你也可以发现。路径最短优先原则并不是通用的，像下面这种路径长度相等的情况就不能单单通过其解决了：
 
-```
-依赖链路一：A -> B -> X(1.0) // dist = 3
+```plain
+依赖链路一：A -> B -> X(1.0) // dist = 2
 依赖链路二：A -> D -> X(2.0) // dist = 2
 ```
 
@@ -190,7 +190,7 @@ Maven 在遇到这种问题的时候，会遵循 **路径最短优先** 和 **�
 
 举个例子，当前项目存在下面这样的依赖关系：
 
-```
+```plain
 依赖链路一：A -> B -> C -> X(1.5) // dist = 3
 依赖链路二：A -> D -> X(1.0) // dist = 2
 ```
@@ -201,10 +201,10 @@ Maven 在遇到这种问题的时候，会遵循 **路径最短优先** 和 **�
 
 现在知道为什么你的 Maven 项目总是会报`NoClassDefFoundError`和`NoSuchMethodError`错误了吧？
 
-**如何解决呢？** 我们可以通过`exclusive`标签手动将 X(1.0) 给排除。
+**如何解决呢？** 我们可以通过`exclusion`标签手动将 X(1.0) 给排除。
 
 ```xml
-<dependencyD>
+<dependency>
     ......
     <exclusions>
       <exclusion>
@@ -221,7 +221,7 @@ Maven 在遇到这种问题的时候，会遵循 **路径最短优先** 和 **�
 
 还是上面的例子：
 
-```
+```plain
 依赖链路一：A -> B -> C -> X(1.5) // dist = 3
 依赖链路二：A -> D -> X(1.0) // dist = 2
 ```
@@ -460,3 +460,5 @@ Maven 插件被分为下面两种类型：
 - Maven 依赖范围：<http://www.mvnbook.com/maven-dependency.html>
 - 解决 maven 依赖冲突，这篇就够了！：<https://www.cnblogs.com/qdhxhz/p/16363532.html>
 - Multi-Module Project with Maven：<https://www.baeldung.com/maven-multi-module>
+
+<!-- @include: @article-footer.snippet.md -->

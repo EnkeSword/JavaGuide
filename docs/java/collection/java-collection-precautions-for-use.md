@@ -141,7 +141,7 @@ System.out.println(list); /* [1, 3, 5, 7, 9] */
 
 - 使用普通的 for 循环
 - 使用 fail-safe 的集合类。`java.util`包下面的所有的集合类都是 fail-fast 的，而`java.util.concurrent`包下面的所有的类都是 fail-safe 的。
-- ......
+- ……
 
 ## 集合去重
 
@@ -212,8 +212,6 @@ public int indexOf(Object o) {
 }
 
 ```
-
-我们的 `List` 有 N 个元素，那时间复杂度就接近是 O (n^2)。
 
 ## 集合转数组
 
@@ -439,3 +437,5 @@ CollectionUtils.addAll(list, str);
 Integer[] array = {1, 2, 3};
 List<Integer> list = List.of(array);
 ```
+
+<!-- @include: @article-footer.snippet.md -->

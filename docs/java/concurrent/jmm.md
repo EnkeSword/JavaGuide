@@ -32,7 +32,7 @@ JMM(Java 内存模型)主要定义了对于一个共享变量，当另一个线�
 
 现代的 CPU Cache 通常分为三层，分别叫 L1,L2,L3 Cache。有些 CPU 可能还有 L4 Cache，这里不做讨论，并不常见
 
-**CPU Cache 的工作方式：** 先复制一份数据到 CPU Cache 中，当 CPU 需要用到的时候就可以直接从 CPU Cache 中读取数据，当运算完成后，再将运算得到的数据写回 Main Memory 中。但是，这样存在 **内存缓存不一致性的问题** ！比如我执行一个 i++ 操作的话，如果两个线程同时执行的话，假设两个线程从 CPU Cache 中读取的 i=1，两个线程做了 1++ 运算完之后再写回 Main Memory 之后 i=2，而正确结果应该是 i=3。
+**CPU Cache 的工作方式：** 先复制一份数据到 CPU Cache 中，当 CPU 需要用到的时候就可以直接从 CPU Cache 中读取数据，当运算完成后，再将运算得到的数据写回 Main Memory 中。但是，这样存在 **内存缓存不一致性的问题** ！比如我执行一个 i++ 操作的话，如果两个线程同时执行的话，假设两个线程从 CPU Cache 中读取的 i=1，两个线程做了 i++ 运算完之后再写回 Main Memory 之后 i=2，而正确结果应该是 i=3。
 
 **CPU 为了解决内存缓存不一致性问题可以通过制定缓存一致协议（比如 [MESI 协议](https://zh.wikipedia.org/wiki/MESI%E5%8D%8F%E8%AE%AE)）或者其他手段来解决。** 这个缓存一致性协议指的是在 CPU 高速缓存与主内存交互的时候需要遵守的原则和规范。不同的 CPU 中，使用的缓存一致性协议通常也会有所不同。
 
@@ -89,8 +89,8 @@ JMM 说白了就是定义了一些规范来解决这些问题，开发者可以�
 
 **什么是主内存？什么是本地内存？**
 
-- **主内存**：所有线程创建的实例对象都存放在主内存中，不管该实例对象是成员变量还是方法中的本地变量(也称局部变量)
-- **本地内存**：每个线程都有一个私有的本地内存来存储共享变量的副本，并且，每个线程只能访问自己的本地内存，无法访问其他线程的本地内存。本地内存是 JMM 抽象出来的一个概念，存储了主内存中的共享变量副本。
+- **主内存**：所有线程创建的实例对象都存放在主内存中，不管该实例对象是成员变量，还是局部变量，类信息、常量、静态变量都是放在主内存中。为了获取更好的运行速度，虚拟机及硬件系统可能会让工作内存优先存储于寄存器和高速缓存中。
+- **本地内存**：每个线程都有一个私有的本地内存，本地内存存储了该线程以读 / 写共享变量的副本。每个线程只能操作自己本地内存中的变量，无法直接访问其他线程的本地内存。如果线程间需要通信，必须通过主内存来进行。本地内存是 JMM 抽象出来的一个概念，并不真实存在，它涵盖了缓存、写缓冲区、寄存器以及其他的硬件和编译器优化。
 
 Java 内存模型的抽象示意图如下：
 
@@ -126,7 +126,7 @@ Java 内存模型的抽象示意图如下：
 - 一个变量在同一个时刻只允许一条线程对其进行 lock 操作，但 lock 操作可以被同一条线程重复执行多次，多次执行 lock 后，只有执行相同次数的 unlock 操作，变量才会被解锁。
 - 如果对一个变量执行 lock 操作，将会清空工作内存中此变量的值，在执行引擎使用这个变量前，需要重新执行 load 或 assign 操作初始化变量的值。
 - 如果一个变量事先没有被 lock 操作锁定，则不允许对它执行 unlock 操作，也不允许去 unlock 一个被其他线程锁定住的变量。
-- ......
+- ……
 
 ### Java 内存区域和 JMM 有何区别？
 
@@ -160,9 +160,9 @@ JSR 133 引入了 happens-before 这个概念来描述两个操作之间的内�
 我们看下面这段代码：
 
 ```java
-int userNum = getUserNum(); 	// 1
-int teacherNum = getTeacherNum();	 // 2
-int totalNum = userNum + teacherNum;	// 3
+int userNum = getUserNum();   // 1
+int teacherNum = getTeacherNum();   // 2
+int totalNum = userNum + teacherNum;  // 3
 ```
 
 - 1 happens-before 2
@@ -232,7 +232,9 @@ happens-before 与 JMM 的关系用《Java 并发编程的艺术》这本书中�
 ## 参考
 
 - 《Java 并发编程的艺术》第三章 Java 内存模型
-- 《深入浅出 Java 多线程》：http://concurrent.redspider.group/RedSpider.html
-- Java 内存访问重排序的研究：https://tech.meituan.com/2014/09/23/java-memory-reordering.html
-- 嘿，同学，你要的 Java 内存模型 (JMM) 来了：https://xie.infoq.cn/article/739920a92d0d27e2053174ef2
-- JSR 133 (Java Memory Model) FAQ：https://www.cs.umd.edu/~pugh/java/memoryModel/jsr-133-faq.html
+- 《深入浅出 Java 多线程》：<http://concurrent.redspider.group/RedSpider.html>
+- Java 内存访问重排序的研究：<https://tech.meituan.com/2014/09/23/java-memory-reordering.html>
+- 嘿，同学，你要的 Java 内存模型 (JMM) 来了：<https://xie.infoq.cn/article/739920a92d0d27e2053174ef2>
+- JSR 133 (Java Memory Model) FAQ：<https://www.cs.umd.edu/~pugh/java/memoryModel/jsr-133-faq.html>
+
+<!-- @include: @article-footer.snippet.md -->

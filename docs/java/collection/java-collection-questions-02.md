@@ -12,6 +12,8 @@ head:
       content: Java集合常见知识点和面试题总结，希望对你有帮助！
 ---
 
+<!-- @include: @article-header.snippet.md -->
+
 ## Map（重要）
 
 ### HashMap 和 Hashtable 的区别
@@ -78,6 +80,15 @@ head:
 
 实现 `NavigableMap` 接口让 `TreeMap` 有了对集合内元素的搜索的能力。
 
+`NavigableMap` 接口提供了丰富的方法来探索和操作键值对:
+
+1. **定向搜索**: `ceilingEntry()`, `floorEntry()`, `higherEntry()`和 `lowerEntry()` 等方法可以用于定位大于、小于、大于等于、小于等于给定键的最接近的键值对。
+2. **子集操作**: `subMap()`, `headMap()`和 `tailMap()` 方法可以高效地创建原集合的子集视图，而无需复制整个集合。
+3. **逆序视图**:`descendingMap()` 方法返回一个逆序的 `NavigableMap` 视图，使得可以反向迭代整个 `TreeMap`。
+4. **边界操作**: `firstEntry()`, `lastEntry()`, `pollFirstEntry()`和 `pollLastEntry()` 等方法可以方便地访问和移除元素。
+
+这些方法都是基于红黑树数据结构的属性实现的，红黑树保持平衡状态，从而保证了搜索操作的时间复杂度为 O(log n)，这让 `TreeMap` 成为了处理有序集合搜索问题的强大工具。
+
 实现`SortedMap`接口让 `TreeMap` 有了对集合中的元素根据键排序的能力。默认是按 key 的升序排序，不过我们也可以指定排序的比较器。示例代码如下：
 
 ```java
@@ -118,7 +129,7 @@ public class Person {
 
 输出:
 
-```
+```plain
 person1
 person4
 person2
@@ -136,7 +147,7 @@ TreeMap<Person, String> treeMap = new TreeMap<>((person1, person2) -> {
 });
 ```
 
-**综上，相比于`HashMap`来说 `TreeMap` 主要多了对集合中的元素根据键排序的能力以及对集合内元素的搜索的能力。**
+**综上，相比于`HashMap`来说， `TreeMap` 主要多了对集合中的元素根据键排序的能力以及对集合内元素的搜索的能力。**
 
 ### HashSet 如何检查重复?
 
@@ -228,7 +239,7 @@ for (int binCount = 0; ; ++binCount) {
     // 遍历到链表最后一个节点
     if ((e = p.next) == null) {
         p.next = newNode(hash, key, value, null);
-        // 如果链表元素个数大于等于TREEIFY_THRESHOLD（8）
+        // 如果链表元素个数大于TREEIFY_THRESHOLD（8）
         if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
             // 红黑树转换（并不会直接转换成红黑树）
             treeifyBin(tab, hash);
@@ -274,11 +285,11 @@ final void treeifyBin(Node<K,V>[] tab, int hash) {
 
 ### HashMap 的长度为什么是 2 的幂次方
 
-为了能让 HashMap 存取高效，尽量较少碰撞，也就是要尽量把数据分配均匀。我们上面也讲到了过了，Hash 值的范围值-2147483648 到 2147483647，前后加起来大概 40 亿的映射空间，只要哈希函数映射得比较均匀松散，一般应用是很难出现碰撞的。但问题是一个 40 亿长度的数组，内存是放不下的。所以这个散列值是不能直接拿来用的。用之前还要先做对数组的长度取模运算，得到的余数才能用来要存放的位置也就是对应的数组下标。这个数组下标的计算方法是“ `(n - 1) & hash`”。（n 代表数组长度）。这也就解释了 HashMap 的长度为什么是 2 的幂次方。
+为了能让 HashMap 存取高效，尽量较少碰撞，也就是要尽量把数据分配均匀。我们上面也讲到了过了，Hash 值的范围值-2147483648 到 2147483647，前后加起来大概 40 亿的映射空间，只要哈希函数映射得比较均匀松散，一般应用是很难出现碰撞的。但问题是一个 40 亿长度的数组，内存是放不下的。所以这个散列值是不能直接拿来用的。用之前还要先做对数组的长度取模运算，得到的余数才能用来要存放的位置也就是对应的数组下标。
 
 **这个算法应该如何设计呢？**
 
-我们首先可能会想到采用%取余的操作来实现。但是，重点来了：**“取余(%)操作中如果除数是 2 的幂次则等价于与其除数减一的与(&)操作（也就是说 hash%length==hash&(length-1)的前提是 length 是 2 的 n 次方；）。”** 并且 **采用二进制位操作 &，相对于%能够提高运算效率，这就解释了 HashMap 的长度为什么是 2 的幂次方。**
+我们首先可能会想到采用 % 取余的操作来实现。但是，重点来了：“**取余(%)操作中如果除数是 2 的幂次则等价于与其除数减一的与(&)操作**（也就是说 hash%length==hash&(length-1)的前提是 length 是 2 的 n 次方；）。” 并且 **采用二进制位操作 & 相对于 % 能够提高运算效率**，这就解释了 HashMap 的长度为什么是 2 的幂次方。
 
 ### HashMap 多线程操作导致死循环问题
 
@@ -354,7 +365,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
 
 当遍历不存在阻塞时, parallelStream 的性能是最低的：
 
-```
+```plain
 Benchmark               Mode  Cnt     Score      Error  Units
 Test.entrySet           avgt    5   288.651 ±   10.536  ns/op
 Test.keySet             avgt    5   584.594 ±   21.431  ns/op
@@ -364,7 +375,7 @@ Test.parallelStream     avgt    5  6919.163 ± 1116.139  ns/op
 
 加入阻塞代码`Thread.sleep(10)`后, parallelStream 的性能才是最高的:
 
-```
+```plain
 Benchmark               Mode  Cnt           Score          Error  Units
 Test.entrySet           avgt    5  1554828440.000 ± 23657748.653  ns/op
 Test.keySet             avgt    5  1550612500.000 ±  6474562.858  ns/op
@@ -457,6 +468,89 @@ Java 8 中，锁粒度更细，`synchronized` 只锁定当前链表或红黑二�
 - **Hash 碰撞解决方法** : JDK 1.7 采用拉链法，JDK1.8 采用拉链法结合红黑树（链表长度超过一定阈值时，将链表转换为红黑树）。
 - **并发度**：JDK 1.7 最大并发度是 Segment 的个数，默认是 16。JDK 1.8 最大并发度是 Node 数组的大小，并发度更大。
 
+### ConcurrentHashMap 为什么 key 和 value 不能为 null？
+
+`ConcurrentHashMap` 的 key 和 value 不能为 null 主要是为了避免二义性。null 是一个特殊的值，表示没有对象或没有引用。如果你用 null 作为键，那么你就无法区分这个键是否存在于 `ConcurrentHashMap` 中，还是根本没有这个键。同样，如果你用 null 作为值，那么你就无法区分这个值是否是真正存储在 `ConcurrentHashMap` 中的，还是因为找不到对应的键而返回的。
+
+拿 get 方法取值来说，返回的结果为 null 存在两种情况：
+
+- 值没有在集合中 ；
+- 值本身就是 null。
+
+这也就是二义性的由来。
+
+具体可以参考 [ConcurrentHashMap 源码分析](https://javaguide.cn/java/collection/concurrent-hash-map-source-code.html) 。
+
+多线程环境下，存在一个线程操作该 `ConcurrentHashMap` 时，其他的线程将该 `ConcurrentHashMap` 修改的情况，所以无法通过 `containsKey(key)` 来判断否存在这个键值对，也就没办法解决二义性问题了。
+
+与此形成对比的是，`HashMap` 可以存储 null 的 key 和 value，但 null 作为键只能有一个，null 作为值可以有多个。如果传入 null 作为参数，就会返回 hash 值为 0 的位置的值。单线程环境下，不存在一个线程操作该 HashMap 时，其他的线程将该 `HashMap` 修改的情况，所以可以通过 `contains(key)`来做判断是否存在这个键值对，从而做相应的处理，也就不存在二义性问题。
+
+也就是说，多线程下无法正确判定键值对是否存在（存在其他线程修改的情况），单线程是可以的（不存在其他线程修改的情况）。
+
+如果你确实需要在 ConcurrentHashMap 中使用 null 的话，可以使用一个特殊的静态空对象来代替 null。
+
+```java
+public static final Object NULL = new Object();
+```
+
+最后，再分享一下 `ConcurrentHashMap` 作者本人 (Doug Lea)对于这个问题的回答：
+
+> The main reason that nulls aren't allowed in ConcurrentMaps (ConcurrentHashMaps, ConcurrentSkipListMaps) is that ambiguities that may be just barely tolerable in non-concurrent maps can't be accommodated. The main one is that if `map.get(key)` returns `null`, you can't detect whether the key explicitly maps to `null` vs the key isn't mapped. In a non-concurrent map, you can check this via `map.contains(key)`, but in a concurrent one, the map might have changed between calls.
+
+翻译过来之后的，大致意思还是单线程下可以容忍歧义，而多线程下无法容忍。
+
+### ConcurrentHashMap 能保证复合操作的原子性吗？
+
+`ConcurrentHashMap` 是线程安全的，意味着它可以保证多个线程同时对它进行读写操作时，不会出现数据不一致的情况，也不会导致 JDK1.7 及之前版本的 `HashMap` 多线程操作导致死循环问题。但是，这并不意味着它可以保证所有的复合操作都是原子性的，一定不要搞混了！
+
+复合操作是指由多个基本操作(如`put`、`get`、`remove`、`containsKey`等)组成的操作，例如先判断某个键是否存在`containsKey(key)`，然后根据结果进行插入或更新`put(key, value)`。这种操作在执行过程中可能会被其他线程打断，导致结果不符合预期。
+
+例如，有两个线程 A 和 B 同时对 `ConcurrentHashMap` 进行复合操作，如下：
+
+```java
+// 线程 A
+if (!map.containsKey(key)) {
+map.put(key, value);
+}
+// 线程 B
+if (!map.containsKey(key)) {
+map.put(key, anotherValue);
+}
+```
+
+如果线程 A 和 B 的执行顺序是这样：
+
+1. 线程 A 判断 map 中不存在 key
+2. 线程 B 判断 map 中不存在 key
+3. 线程 B 将 (key, anotherValue) 插入 map
+4. 线程 A 将 (key, value) 插入 map
+
+那么最终的结果是 (key, value)，而不是预期的 (key, anotherValue)。这就是复合操作的非原子性导致的问题。
+
+**那如何保证 `ConcurrentHashMap` 复合操作的原子性呢？**
+
+`ConcurrentHashMap` 提供了一些原子性的复合操作，如 `putIfAbsent`、`compute`、`computeIfAbsent` 、`computeIfPresent`、`merge`等。这些方法都可以接受一个函数作为参数，根据给定的 key 和 value 来计算一个新的 value，并且将其更新到 map 中。
+
+上面的代码可以改写为：
+
+```java
+// 线程 A
+map.putIfAbsent(key, value);
+// 线程 B
+map.putIfAbsent(key, anotherValue);
+```
+
+或者：
+
+```java
+// 线程 A
+map.computeIfAbsent(key, k -> value);
+// 线程 B
+map.computeIfAbsent(key, k -> anotherValue);
+```
+
+很多同学可能会说了，这种情况也能加锁同步呀！确实可以，但不建议使用加锁的同步机制，违背了使用 `ConcurrentHashMap` 的初衷。在使用 `ConcurrentHashMap` 的时候，尽量使用这些原子性的复合操作方法来保证原子性。
+
 ## Collections 工具类（不重要）
 
 **`Collections` 工具类常用方法**:
@@ -504,3 +598,5 @@ synchronizedList(List<T> list)//返回指定列表支持的同步（线程安全
 synchronizedMap(Map<K,V> m) //返回由指定映射支持的同步（线程安全的）Map。
 synchronizedSet(Set<T> s) //返回指定 set 支持的同步（线程安全的）set。
 ```
+
+<!-- @include: @article-footer.snippet.md -->

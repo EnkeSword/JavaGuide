@@ -42,8 +42,8 @@ package org.springframework.boot.autoconfigure;
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @ComponentScan(excludeFilters = {
-		@Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
-		@Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) })
+    @Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
+    @Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) })
 public @interface SpringBootApplication {
    ......
 }
@@ -168,7 +168,7 @@ public ResponseEntity<List<User>> getAllUsers() {
 ```java
 @PostMapping("/users")
 public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
- return userRespository.save(userCreateRequest);
+ return userRepository.save(userCreateRequest);
 }
 ```
 
@@ -390,7 +390,7 @@ SpringBoot 项目的 spring-boot-starter-web 依赖中已经有 hibernate-valida
 - `@Digits(integer, fraction)`被注释的元素必须是一个数字，其值必须在可接受的范围内
 - `@Past`被注释的元素必须是一个过去的日期
 - `@Future` 被注释的元素必须是一个将来的日期
-- ......
+- ……
 
 #### 6.2. 验证请求体(RequestBody)
 
@@ -582,33 +582,33 @@ jpa 提供的主键生成策略有如下几种：
 
 ```java
 public class DefaultIdentifierGeneratorFactory
-		implements MutableIdentifierGeneratorFactory, Serializable, ServiceRegistryAwareService {
+    implements MutableIdentifierGeneratorFactory, Serializable, ServiceRegistryAwareService {
 
-	@SuppressWarnings("deprecation")
-	public DefaultIdentifierGeneratorFactory() {
-		register( "uuid2", UUIDGenerator.class );
-		register( "guid", GUIDGenerator.class );			// can be done with UUIDGenerator + strategy
-		register( "uuid", UUIDHexGenerator.class );			// "deprecated" for new use
-		register( "uuid.hex", UUIDHexGenerator.class ); 	// uuid.hex is deprecated
-		register( "assigned", Assigned.class );
-		register( "identity", IdentityGenerator.class );
-		register( "select", SelectGenerator.class );
-		register( "sequence", SequenceStyleGenerator.class );
-		register( "seqhilo", SequenceHiLoGenerator.class );
-		register( "increment", IncrementGenerator.class );
-		register( "foreign", ForeignGenerator.class );
-		register( "sequence-identity", SequenceIdentityGenerator.class );
-		register( "enhanced-sequence", SequenceStyleGenerator.class );
-		register( "enhanced-table", TableGenerator.class );
-	}
+  @SuppressWarnings("deprecation")
+  public DefaultIdentifierGeneratorFactory() {
+    register( "uuid2", UUIDGenerator.class );
+    register( "guid", GUIDGenerator.class );      // can be done with UUIDGenerator + strategy
+    register( "uuid", UUIDHexGenerator.class );      // "deprecated" for new use
+    register( "uuid.hex", UUIDHexGenerator.class );   // uuid.hex is deprecated
+    register( "assigned", Assigned.class );
+    register( "identity", IdentityGenerator.class );
+    register( "select", SelectGenerator.class );
+    register( "sequence", SequenceStyleGenerator.class );
+    register( "seqhilo", SequenceHiLoGenerator.class );
+    register( "increment", IncrementGenerator.class );
+    register( "foreign", ForeignGenerator.class );
+    register( "sequence-identity", SequenceIdentityGenerator.class );
+    register( "enhanced-sequence", SequenceStyleGenerator.class );
+    register( "enhanced-table", TableGenerator.class );
+  }
 
-	public void register(String strategy, Class generatorClass) {
-		LOG.debugf( "Registering IdentifierGenerator strategy [%s] -> [%s]", strategy, generatorClass.getName() );
-		final Class previous = generatorStrategyToClassNameMap.put( strategy, generatorClass );
-		if ( previous != null ) {
-			LOG.debugf( "    - overriding [%s]", previous.getName() );
-		}
-	}
+  public void register(String strategy, Class generatorClass) {
+    LOG.debugf( "Registering IdentifierGenerator strategy [%s] -> [%s]", strategy, generatorClass.getName() );
+    final Class previous = generatorStrategyToClassNameMap.put( strategy, generatorClass );
+    if ( previous != null ) {
+      LOG.debugf( "    - overriding [%s]", previous.getName() );
+    }
+  }
 
 }
 ```
@@ -958,3 +958,5 @@ public abstract class TestBase {
 _暂时总结到这里吧！虽然花了挺长时间才写完，不过可能还是会一些常用的注解的被漏掉，所以，我将文章也同步到了 Github 上去，Github 地址： 欢迎完善！_
 
 本文已经收录进我的 75K Star 的 Java 开源项目 JavaGuide：[https://github.com/Snailclimb/JavaGuide](https://github.com/Snailclimb/JavaGuide)。
+
+<!-- @include: @article-footer.snippet.md -->
