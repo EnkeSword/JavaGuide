@@ -85,7 +85,7 @@ String name = "Lokesh";
 String message = STR."Greetings \{name}.";
 
 //FMT
-String message = STR."Greetings %-12s\{name}.";
+String message = FMT."Greetings %-12s\{name}.";
 
 //RAW
 StringTemplate st = RAW."Greetings \{name}.";
@@ -198,7 +198,7 @@ Integer lastElement = linkedHashSet.getLast();    // 3
 linkedHashSet.addFirst(0);  //List contains: [0, 1, 2, 3]
 linkedHashSet.addLast(4);   //List contains: [0, 1, 2, 3, 4]
 
-System.out.println(linkedHashSet.reversed());   //Prints [5, 3, 2, 1, 0]
+System.out.println(linkedHashSet.reversed());   //Prints [4, 3, 2, 1, 0]
 ```
 
 `SequencedMap` 接口继承了 `Map`接口， 提供了在集合两端访问、添加或删除键值对、获取包含 key 的 `SequencedSet`、包含 value 的 `SequencedCollection`、包含 entry（键值对） 的 `SequencedSet`以及获取集合的反向视图的方法。
@@ -297,7 +297,7 @@ static String formatterPatternSwitch(Object obj) {
 }
 ```
 
-## JEP 442: 外部函数和内存 API（第三次预览）
+## JEP 442：外部函数和内存 API（第三次预览）
 
 Java 程序可以通过该 API 与 Java 运行时之外的代码和数据进行互操作。通过高效地调用外部函数（即 JVM 之外的代码）和安全地访问外部内存（即不受 JVM 管理的内存），该 API 使 Java 程序能够调用本机库并处理本机数据，而不会像 JNI 那样危险和脆弱。
 

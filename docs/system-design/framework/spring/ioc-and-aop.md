@@ -36,7 +36,7 @@ IoC （Inversion of Control ）即控制反转/反转控制。它是一种思想
 - **控制** ：指的是对象创建（实例化、管理）的权力
 - **反转** ：控制权交给外部环境（IoC 容器）
 
-![IoC 图解](https://oss.javaguide.cn/java-guide-blog/frc-365faceb5697f04f31399937c059c162.png)
+![IoC 图解](https://oss.javaguide.cn/github/javaguide/system-design/framework/spring/IoC&Aop-ioc-illustration.png)
 
 ### IoC 解决了什么问题?
 
@@ -49,17 +49,15 @@ IoC 的思想就是两方之间不互相依赖，由第三方容器来管理相�
 
 在没有使用 IoC 思想的情况下，Service 层想要使用 Dao 层的具体实现的话，需要通过 new 关键字在`UserServiceImpl` 中手动 new 出 `IUserDao` 的具体实现类 `UserDaoImpl`（不能直接 new 接口类）。
 
-![](https://oss.javaguide.cn/github/javaguide/system-design/framework/spring/ioc-kfji3.png)
-
 很完美，这种方式也是可以实现的，但是我们想象一下如下场景：
 
 开发过程中突然接到一个新的需求，针对`IUserDao` 接口开发出另一个具体实现类。因为 Server 层依赖了`IUserDao`的具体实现，所以我们需要修改`UserServiceImpl`中 new 的对象。如果只有一个类引用了`IUserDao`的具体实现，可能觉得还好，修改起来也不是很费力气，但是如果有许许多多的地方都引用了`IUserDao`的具体实现的话，一旦需要更换`IUserDao` 的实现方式，那修改起来将会非常的头疼。
 
-![](https://oss.javaguide.cn/github/javaguide/system-design/framework/spring/why-ioc.png)
+![IoC&Aop-ioc-illustration-dao-service](https://oss.javaguide.cn/github/javaguide/system-design/framework/spring/IoC&Aop-ioc-illustration-dao-service.png)
 
 使用 IoC 的思想，我们将对象的控制权（创建、管理）交由 IoC 容器去管理，我们在使用的时候直接向 IoC 容器 “要” 就可以了
 
-![](https://oss.javaguide.cn/github/javaguide/system-design/framework/spring/why-ioc-2.png)
+![](https://oss.javaguide.cn/github/javaguide/system-design/framework/spring/IoC&Aop-ioc-illustration-dao.png)
 
 ### IoC 和 DI 有区别吗？
 
@@ -87,6 +85,8 @@ AOP 的目的是将横切关注点（如日志记录、事务管理、权限控�
 
 AOP 之所以叫面向切面编程，是因为它的核心思想就是将横切关注点从核心业务逻辑中分离出来，形成一个个的**切面（Aspect）**。
 
+![面向切面编程图解](https://oss.javaguide.cn/github/javaguide/system-design/framework/spring/aop-program-execution.jpg)
+
 这里顺带总结一下 AOP 关键术语（不理解也没关系，可以继续往下看）：
 
 - **横切关注点（cross-cutting concerns）** ：多个类或对象中的公共行为（如日志记录、事务管理、权限控制、接口限流、接口幂等等）。
@@ -94,7 +94,17 @@ AOP 之所以叫面向切面编程，是因为它的核心思想就是将横切�
 - **连接点（JoinPoint）**：连接点是方法调用或者方法执行时的某个特定时刻（如方法调用、异常抛出等）。
 - **通知（Advice）**：通知就是切面在某个连接点要执行的操作。通知有五种类型，分别是前置通知（Before）、后置通知（After）、返回通知（AfterReturning）、异常通知（AfterThrowing）和环绕通知（Around）。前四种通知都是在目标方法的前后执行，而环绕通知可以控制目标方法的执行过程。
 - **切点（Pointcut）**：一个切点是一个表达式，它用来匹配哪些连接点需要被切面所增强。切点可以通过注解、正则表达式、逻辑运算等方式来定义。比如 `execution(* com.xyz.service..*(..))`匹配 `com.xyz.service` 包及其子包下的类或接口。
-- **织入（Weaving）**：织入是将切面和目标对象连接起来的过程，也就是将通知应用到切点匹配的连接点上。常见的织入时机有两种，分别是编译期织入（AspectJ）和运行期织入（AspectJ）。
+- **织入（Weaving）**：织入是将切面和目标对象连接起来的过程，也就是将通知应用到切点匹配的连接点上。常见的织入时机有两种，分别是编译期织入（Compile-Time Weaving 如：AspectJ）和运行期织入（Runtime Weaving 如：AspectJ、Spring AOP）。
+
+### AOP 常见的通知类型有哪些？
+
+![](https://oss.javaguide.cn/github/javaguide/system-design/framework/spring/aspectj-advice-types.jpg)
+
+- **Before**（前置通知）：目标对象的方法调用之前触发
+- **After** （后置通知）：目标对象的方法调用之后触发
+- **AfterReturning**（返回通知）：目标对象的方法调用完成，在返回结果值之后触发
+- **AfterThrowing**（异常通知）：目标对象的方法运行中抛出 / 触发异常后触发。AfterReturning 和 AfterThrowing 两者互斥。如果方法调用成功无异常，则会有返回值；如果方法抛出了异常，则不会有返回值。
+- **Around** （环绕通知）：编程式控制目标对象的方法调用。环绕通知是所有通知类型中可操作范围最大的一种，因为它可以直接拿到目标对象，以及要执行的方法，所以环绕通知可以任意的在目标对象的方法调用前后搞事，甚至不调用目标对象的方法
 
 ### AOP 解决了什么问题？
 
@@ -200,14 +210,80 @@ public CommonResponse<Object> method1() {
 
 AOP 的常见实现方式有动态代理、字节码操作等方式。
 
-Spring AOP 就是基于动态代理的，如果要代理的对象，实现了某个接口，那么 Spring AOP 会使用 **JDK Proxy**，去创建代理对象，而对于没有实现接口的对象，就无法使用 JDK Proxy 去进行代理了，这时候 Spring AOP 会使用 **Cglib** 生成一个被代理对象的子类来作为代理，如下图所示：
+Spring AOP 就是基于动态代理的，如果要代理的对象，实现了某个接口，那么 Spring AOP 会使用 **JDK Proxy**，去创建代理对象，而对于没有实现接口的对象，就无法使用 JDK Proxy 去进行代理了，这时候 Spring AOP 会使用 CGLIB 生成一个被代理对象的子类来作为代理，如下图所示：
 
 ![SpringAOPProcess](https://oss.javaguide.cn/github/javaguide/system-design/framework/spring/230ae587a322d6e4d09510161987d346.jpeg)
+
+**Spring Boot 和 Spring 的动态代理的策略是不是也是一样的呢？**其实不一样，很多人都理解错了。
+
+Spring Boot 2.0 之前，默认使用 **JDK 动态代理**。如果目标类没有实现接口，会抛出异常，开发者必须显式配置（`spring.aop.proxy-target-class=true`）使用 **CGLIB 动态代理** 或者注入接口来解决。Spring Boot 1.5.x 自动配置 AOP 代码如下：
+
+```java
+@Configuration
+@ConditionalOnClass({ EnableAspectJAutoProxy.class, Aspect.class, Advice.class })
+@ConditionalOnProperty(prefix = "spring.aop", name = "auto", havingValue = "true", matchIfMissing = true)
+public class AopAutoConfiguration {
+
+	@Configuration
+	@EnableAspectJAutoProxy(proxyTargetClass = false)
+ // 该配置类只有在 spring.aop.proxy-target-class=false 或未显式配置时才会生效。
+ // 也就是说，如果开发者未明确选择代理方式，Spring 会默认加载 JDK 动态代理。
+	@ConditionalOnProperty(prefix = "spring.aop", name = "proxy-target-class", havingValue = "false", matchIfMissing = true)
+	public static class JdkDynamicAutoProxyConfiguration {
+
+	}
+
+	@Configuration
+	@EnableAspectJAutoProxy(proxyTargetClass = true)
+ // 该配置类只有在 spring.aop.proxy-target-class=true 时才会生效。
+ // 即开发者通过属性配置明确指定使用 CGLIB 动态代理时，Spring 会加载这个配置类。
+	@ConditionalOnProperty(prefix = "spring.aop", name = "proxy-target-class", havingValue = "true", matchIfMissing = false)
+	public static class CglibAutoProxyConfiguration {
+
+	}
+
+}
+```
+
+Spring Boot 2.0 开始，如果用户什么都不配置的话，默认使用 **CGLIB 动态代理**。如果需要强制使用 JDK 动态代理，可以在配置文件中添加：`spring.aop.proxy-target-class=false`。Spring Boot 2.0 自动配置 AOP 代码如下：
+
+```java
+@Configuration
+@ConditionalOnClass({ EnableAspectJAutoProxy.class, Aspect.class, Advice.class,
+		AnnotatedElement.class })
+@ConditionalOnProperty(prefix = "spring.aop", name = "auto", havingValue = "true", matchIfMissing = true)
+public class AopAutoConfiguration {
+
+	@Configuration
+	@EnableAspectJAutoProxy(proxyTargetClass = false)
+ // 该配置类只有在 spring.aop.proxy-target-class=false 时才会生效。
+ // 即开发者通过属性配置明确指定使用 JDK 动态代理时，Spring 会加载这个配置类。
+	@ConditionalOnProperty(prefix = "spring.aop", name = "proxy-target-class", havingValue = "false", matchIfMissing = false)
+	public static class JdkDynamicAutoProxyConfiguration {
+
+	}
+
+	@Configuration
+	@EnableAspectJAutoProxy(proxyTargetClass = true)
+ // 该配置类只有在 spring.aop.proxy-target-class=true 或未显式配置时才会生效。
+ // 也就是说，如果开发者未明确选择代理方式，Spring 会默认加载 CGLIB 代理。
+	@ConditionalOnProperty(prefix = "spring.aop", name = "proxy-target-class", havingValue = "true", matchIfMissing = true)
+	public static class CglibAutoProxyConfiguration {
+
+	}
+
+}
+```
 
 当然你也可以使用 **AspectJ** ！Spring AOP 已经集成了 AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。
 
 **Spring AOP 属于运行时增强，而 AspectJ 是编译时增强。** Spring AOP 基于代理(Proxying)，而 AspectJ 基于字节码操作(Bytecode Manipulation)。
 
-Spring AOP 已经集成了 AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。AspectJ 相比于 Spring AOP 功能更加强大，但是 Spring AOP 相对来说更简单，
+Spring AOP 已经集成了 AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。AspectJ 相比于 Spring AOP 功能更加强大，但是 Spring AOP 相对来说更简单。
 
 如果我们的切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择 AspectJ ，它比 Spring AOP 快很多。
+
+## 参考
+
+- AOP in Spring Boot, is it a JDK dynamic proxy or a Cglib dynamic proxy?：<https://www.springcloud.io/post/2022-01/springboot-aop/>
+- Spring Proxying Mechanisms：<https://docs.spring.io/spring-framework/reference/core/aop/proxying.html>

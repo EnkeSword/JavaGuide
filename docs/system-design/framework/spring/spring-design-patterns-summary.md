@@ -142,7 +142,7 @@ public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
 
 **Spring AOP 属于运行时增强，而 AspectJ 是编译时增强。** Spring AOP 基于代理(Proxying)，而 AspectJ 基于字节码操作(Bytecode Manipulation)。
 
-Spring AOP 已经集成了 AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。AspectJ 相比于 Spring AOP 功能更加强大，但是 Spring AOP 相对来说更简单，
+Spring AOP 已经集成了 AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。AspectJ 相比于 Spring AOP 功能更加强大，但是 Spring AOP 相对来说更简单。
 
 如果我们的切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择 AspectJ ，它比 Spring AOP 快很多。
 
@@ -346,7 +346,6 @@ Spring 框架中用到了哪些设计模式？
 
 - 《Spring 技术内幕》
 - <https://blog.eduonix.com/java-programming-2/learn-design-patterns-used-spring-framework/>
-- <http://blog.yeamin.top/2018/03/27/单例模式-Spring%20 单例实现原理分析/>
 - <https://www.tutorialsteacher.com/ioc/inversion-of-control>
 - <https://design-patterns.readthedocs.io/zh_CN/latest/behavioral_patterns/observer.html>
 - <https://juejin.im/post/5a8eb261f265da4e9e307230>

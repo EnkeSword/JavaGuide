@@ -20,14 +20,14 @@ export default sidebar({
   // 必须放在最后面
   "/": [
     {
-      text: "必看",
+      text: "项目介绍",
       icon: "star",
       collapsible: true,
       prefix: "javaguide/",
       children: ["intro", "use-suggestion", "contribution-guideline", "faq"],
     },
     {
-      text: "面试准备",
+      text: "面试准备（必看）",
       icon: "interview",
       collapsible: true,
       prefix: "interview-preparation/",
@@ -35,9 +35,10 @@ export default sidebar({
         "teach-you-how-to-prepare-for-the-interview-hand-in-hand",
         "resume-guide",
         "key-points-of-interview",
+        "java-roadmap",
         "project-experience-guide",
-        "interview-experience",
-        "self-test-of-common-interview-questions",
+        "how-to-handle-interview-nerves",
+        "internship-experience",
       ],
     },
     {
@@ -112,6 +113,7 @@ export default sidebar({
               collapsible: true,
               children: [
                 "optimistic-lock-and-pessimistic-lock",
+                "cas",
                 "jmm",
                 "java-thread-pool-summary",
                 "java-thread-pool-best-practices",
@@ -167,6 +169,8 @@ export default sidebar({
             "java19",
             "java20",
             "java21",
+            "java22-23",
+            "java24",
           ],
         },
       ],
@@ -412,6 +416,7 @@ export default sidebar({
                 "spring-transaction",
                 "spring-design-patterns-summary",
                 "spring-boot-auto-assembly-principles",
+                "async",
               ],
             },
           ],
@@ -579,6 +584,7 @@ export default sidebar({
       collapsible: true,
       children: [
         "high-availability-system-design",
+        "idempotency",
         "redundancy",
         "limit-request",
         "fallback-and-circuit-breaker",
