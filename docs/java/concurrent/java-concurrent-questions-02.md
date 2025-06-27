@@ -60,7 +60,7 @@ public class Singleton {
     private Singleton() {
     }
 
-    public  static Singleton getUniqueInstance() {
+    public static Singleton getUniqueInstance() {
        //先判断对象是否已经实例过，没有实例化过才进入加锁代码
         if (uniqueInstance == null) {
             //类对象加锁
@@ -475,8 +475,8 @@ synchronized static void method() {
 
 对括号里指定的对象/类加锁：
 
-- `synchronized(object)` 表示进入同步代码库前要获得 **给定对象的锁**。
-- `synchronized(类.class)` 表示进入同步代码前要获得 **给定 Class 的锁**
+- `synchronized(object)` 表示进入同步代码块前要获得 **给定对象的锁**。
+- `synchronized(类.class)` 表示进入同步代码块前要获得 **给定 Class 的锁**
 
 ```java
 synchronized(this) {
